@@ -1,4 +1,6 @@
 from random import randint
+import PySimpleGUI as sg
+
 
 class ChuteONumero:
     def __init__(self):
@@ -8,19 +10,34 @@ class ChuteONumero:
         self.tentar_novamnete = True
 
     def iniciar(self):
+        # Layout
+        layout = [
+            [sg.Text('Seu chute', size=(40, 4))],
+            [sg.Input(size=(20, 2), key='ValorChute')],
+            [sg.Button('Chutar!', size=(15, 2), button_color=(sg.YELLOWS[0], sg.BLUES[0]))],
+            [sg.Output(size=(20, 20))]
+        ]
+        # Cria uma janela
+        self.janela = sg.Window('Chute o numero!', layout=layout)
         self.GerarNumeroAleatorio()
-        self.PedirValorAleatorio()
+        #self.PedirValorAleatorio()
         try:
-            while self.tentar_novamnete == True:
-                if int(self.valor_do_chute) > self.valor_aleatorio:
-                    print('Chute um valor mais baixo')
-                    self.PedirValorAleatorio()
-                elif int(self.valor_do_chute) < self.valor_aleatorio:
-                    print('Chute um valor mais alto')
-                    self.PedirValorAleatorio()
-                if int(self.valor_do_chute) == self.valor_aleatorio:
-                    self.tentar_novamnete = False
-                    print('PARABÉNS!! VOCÊ ACERTOU')
+            while True:
+                # Receber os valores
+                self.evento, self.valores = self.janela.Read()
+                self.valor_do_chute = self.valores('ValorChute')
+                # Fazer algo com os valores
+                if self.evento == 'Chutar!':
+                    while self.tentar_novamnete == True:
+                        if int(self.valor_do_chute) > self.valor_aleatorio:
+                            print('Chute um valor mais baixo')
+                            self.PedirValorAleatorio()
+                        elif int(self.valor_do_chute) < self.valor_aleatorio:
+                            print('Chute um valor mais alto')
+                            self.PedirValorAleatorio()
+                        if int(self.valor_do_chute) == self.valor_aleatorio:
+                            self.tentar_novamnete = False
+                            print('PARABÉNS!! VOCÊ ACERTOU')
         except:
             print('DIGITAR APEMAS NÚMEROS INTEIROS!')
             self.iniciar()
